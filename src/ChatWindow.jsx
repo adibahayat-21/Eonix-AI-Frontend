@@ -13,6 +13,9 @@ import { KeyRound, MessageCirclePlus } from "lucide-react";
 import { v1 as uuidv1 } from "uuid";
 import { FaBars } from "react-icons/fa";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+console.log("🌐 API_BASE =", API_BASE);
+
 // (Dummy Data) 
 // const chatHistory = [
 //     { title: "AI Development Discussion", subtitle: "Can you help me understand neural networks?", time: "1h ago", active: true },
@@ -61,7 +64,7 @@ const ChatHistory = () => {
     }
     const deleteChat = async (target_id) => {
         try{
-            const result = await fetch(`http://localhost:8080/api/thread/${target_id}`, { method: "DELETE" });
+            const result = await fetch(`${API_BASE}/api/thread/${target_id}`, { method: "DELETE" });
 
             // const data=await result.json();   //for debugging
             // console.log(data);
@@ -94,7 +97,7 @@ const ChatHistory = () => {
         const fetchHistory = async () => {
 
             try {
-                const r = await fetch("http://localhost:8080/api/thread");
+                const r = await fetch(`${API_BASE}/api/thread`);
                 const data = await r.json();
 
                 // agar data array aata hai, toh set kar do
@@ -256,7 +259,7 @@ const MainChat = ({ toggleSidebar }) => {
                 return;
             }
             try {
-                const r = await fetch(`http://localhost:8080/api/thread/${currThreadId}`);
+                const r = await fetch(`${API_BASE}/api/thread/${currThreadId}`);
                 const data = await r.json();
 
                 if (!r.ok) {
@@ -284,7 +287,7 @@ const MainChat = ({ toggleSidebar }) => {
     }
     const refreshThreads = async () => {
         try {
-            const r = await fetch("http://localhost:8080/api/thread");
+            const r = await fetch(`${API_BASE}/api/thread`);
             const data = await r.json();
             if (Array.isArray(data)) setThreads(data);
         } catch (err) {
@@ -305,7 +308,7 @@ const MainChat = ({ toggleSidebar }) => {
         setPrompt("");   // input box clear ho jaye
 
         try {
-            const r = await fetch("http://localhost:8080/api/chat", {
+            const r = await fetch(`${API_BASE}/api/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ threadId: currThreadId, message: prompt })
